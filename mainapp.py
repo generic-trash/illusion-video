@@ -11,6 +11,9 @@ def echo(ws):
         msg = ws.receive()
         ws.send(msg)
 
+@app.route('/')
+def hi():
+    return "Hello world"
 
 if __name__ == '__main__':
     app.run(gevent=100, port=10000)
