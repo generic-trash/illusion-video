@@ -1,1 +1,1 @@
-web: mainapp.py
+web: uwsgi
