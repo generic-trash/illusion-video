@@ -78,7 +78,7 @@ h2 {
         Stop
     </div>
     <h2>Recording</h2>
-    <video controls="controls" height="120" id="recording" width="160" autoplay></video>
+    <video height="240" id="recording" width="320" autoplay></video>
     <a class="button" id="downloadButton">
         Download
     </a>
@@ -89,47 +89,36 @@ h2 {
 
 
 <script>
-
+window.recorder = null
                 let preview = document.getElementById("preview");
 let recording = document.getElementById("recording");
 let startButton = document.getElementById("startButton");
 let stopButton = document.getElementById("stopButton");
 let downloadButton = document.getElementById("downloadButton");
 let logElement = document.getElementById("log");
-
-let recordingTimeMS = 3000;
  function log(msg) {
   logElement.innerHTML += msg + "\n";
 }
- function wait(delayInMS) {
-  return new Promise(resolve => setTimeout(resolve, delayInMS));
-}
 socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
- function startRecording(stream, lengthInMS) {
-  let recorder = new MediaRecorder(stream);
-  let data = [];
-
-  recorder.ondataavailable = event => {data.push(event.data); socket.send(event.data)};
+function initRecorder(stream) {
+    window.recorder = new MediaRecorder(stream);
+  window.recorder.ondataavailable = event => socket.send(event.data);
+  window.recorder.start()
+}
+ function startRecording(stream) {
+  /*let recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = event => socket.send(event.data);
   recorder.start();
-  log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
- 
-  let stopped = new Promise((resolve, reject) => {
-    recorder.onstop = resolve;
-    recorder.onerror = event => reject(event.name);
-  });
+  return recorder*/
+  initRecorder(stream)
+  return window.recorder
 
-  let recorded = wait(lengthInMS).then(
-    () => recorder.state == "recording" && recorder.stop()
-  );
-
-  return Promise.all([
-    stopped,
-    recorded
-  ])
-  .then(() => data);
 }
  function stop(stream) {
   stream.getTracks().forEach(track => track.stop());
+}
+function wait(delayInMS) {
+  return new Promise(resolve => setTimeout(resolve, delayInMS));
 }
  startButton.addEventListener("click", function() {
   navigator.mediaDevices.getUserMedia({
@@ -140,22 +129,24 @@ socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws
     downloadButton.href = stream;
     preview.captureStream = preview.captureStream || preview.mozCaptureStream;
     return new Promise(resolve => preview.onplaying = resolve);
-  }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
-  /*.then (recordedChunks => {
-    let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
-    recording.src = URL.createObjectURL(recordedBlob);
-    downloadButton.href = recording.src;
-    downloadButton.download = "RecordedVideo.webm";
-
-    log("Successfully recorded " + recordedBlob.size + " bytes of " +
-        recordedBlob.type + " media.");
-  })*/
+  }).then(() => startRecording(preview.captureStream()))
+  .then(() => {
+    setInterval(() => {
+         window.recorder.state == "recording" && recorder.stop()
+         initRecorder(preview.captureStream())
+     }, 2000);
+  })
   .catch(log);
 }, false); stopButton.addEventListener("click", function() {
   stop(preview.srcObject);
 }, false);
 
-socket.onmessage = message => recording.src = URL.createObjectURL(message.data)
+socket.onmessage = message => {
+    if (message.data) {
+        tbr = URL.revokeObjectURL(recording.src)
+        recording.src = URL.createObjectURL(message.data)
+    }
+}
 
 
 </script>

@@ -21,5 +21,5 @@ def hi():
 
 
 if __name__ == '__main__':
-    http_server = WSGIServer(('', int(environ['PORT'])), app, handler_class=WebSocketHandler)
+    http_server = WSGIServer(('', int(environ.get('PORT'))), app, handler_class=WebSocketHandler)
     http_server.serve_forever()
