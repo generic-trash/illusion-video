@@ -15,15 +15,15 @@ def echo(ws):
     while True:
         msg = ws.receive()
         if msg:
-            with open('temp_user_0', 'wb+') as t0, open('temp_user_1', 'wb+') as t1:
+            with open('temp_user_0', 'ab+') as t0, open('temp_user_1', 'ab+') as t1:
                 if user == 0:
+                    t0.seek(0)
                     t0.write(msg)
                     ws.send(t1.read())
                 elif user == 1:
+                    t1.seek(0)
                     t1.write(msg)
                     ws.send(t0.read())
-        else:
-            ws.send(msg)
 
 
 @app.route('/')
