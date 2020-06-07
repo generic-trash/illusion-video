@@ -3,8 +3,10 @@ from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
 from os import environ
 from gevent.pywsgi import WSGIServer
-from incrementor import Noob
+from incrementor import Noob, Blob
 uid = Noob()
+t0 = Blob()
+t1 = Blob()
 app = Flask(__name__)
 websocket = Sockets(app)
 
@@ -15,15 +17,12 @@ def echo(ws):
     while True:
         msg = ws.receive()
         if msg:
-            with open('temp_user_0', 'ab+') as t0, open('temp_user_1', 'ab+') as t1:
-                if user == 0:
-                    t0.seek(0)
-                    t0.write(msg)
-                    ws.send(t1.read())
-                elif user == 1:
-                    t1.seek(0)
-                    t1.write(msg)
-                    ws.send(t0.read())
+            if user == 0:
+                t0.set_data(msg)
+                ws.send(t1.get_data())
+            else:
+                t1.set_data(msg)
+                ws.send(t0.get_data())
 
 
 @app.route('/')
