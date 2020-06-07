@@ -1,23 +1,37 @@
-from flask import Flask
+from flask import Flask, request, redirect
 from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
 from os import environ
 from gevent.pywsgi import WSGIServer
-
+from incrementor import Noob
+uid = Noob()
 app = Flask(__name__)
 websocket = Sockets(app)
 
 
 @websocket.route('/echo')
 def echo(ws):
+    user = int(request.cookies.get('id'))
     while True:
         msg = ws.receive()
-        ws.send(msg)
+        if msg:
+            with open('temp_user_0', 'wb+') as t0, open('temp_user_1', 'wb+') as t1:
+                if user == 0:
+                    t0.write(msg)
+                    ws.send(t1.read())
+                elif user == 1:
+                    t1.write(msg)
+                    ws.send(t0.read())
+        else:
+            ws.send(msg)
 
 
 @app.route('/')
 def hi():
-    return "Hello world"
+    resp = redirect("/static/Recording.html")
+    resp.set_cookie('id', str(uid.val))
+    uid.increment()
+    return resp
 
 
 if __name__ == '__main__':
