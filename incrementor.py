@@ -16,6 +16,7 @@ class Blob(object):
         self.hash = 0
 
     def set_data(self, data):
+        data = bytes(data)
         self.hash = hash(data)
         with open(self.id, 'wb') as file:
             file.write(data)
