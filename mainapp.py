@@ -29,6 +29,7 @@ def echo(ws):
         elif user != 0 and wshash != hash(t0):
             ws.send(t0.get_data())
             wshash = hash(t0)
+        ws.send(b'')
 
 
 @app.route('/')
