@@ -27,7 +27,7 @@ def echo(ws):
         if user == 0 and wshash != hash(t1):
             ws.send(t1.get_data())
             wshash = hash(t1)
-        elif user == 1 and wshash != hash(t0):
+        elif user != 0 and wshash != hash(t0):
             ws.send(t0.get_data())
             wshash = hash(t0)
 
