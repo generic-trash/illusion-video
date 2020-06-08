@@ -6,23 +6,24 @@ from gevent.pywsgi import WSGIServer
 from incrementor import Noob, Blob
 
 uid = Noob()
-streamBlob = Blob()
+t0 = Blob()
+t1 = Blob()
 app = Flask(__name__)
 websocket = Sockets(app)
 
 
 @websocket.route('/echo')
 def echo(ws):
-    isstreamer = int(request.cookies.get('id')) == 0
+    user = int(request.cookies.get('id'))
     wshash = 0
     while True:
-        if isstreamer:
-            msg = ws.receive()
-            if msg:
-                streamBlob.set_data(msg)
-        elif wshash != hash(streamBlob):
-            ws.send(streamBlob.get_data())
-            wshash = hash(streamBlob)
+        msg = ws.receive()
+        if msg:
+            if user == 0:
+                t0.set_data(msg)
+        if user != 0 and wshash != hash(t0):
+            ws.send(t0.get_data())
+            wshash = hash(t0)
 
 
 @app.route('/')
