@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, send_file
 from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
 from os import environ
@@ -34,7 +34,7 @@ def echo(ws):
 
 @app.route('/')
 def hi():
-    resp = redirect("/static/Recording.html")
+    resp = send_file("static/Recording.html")
     resp.set_cookie('id', str(uid.val))
     uid.increment()
     return resp
