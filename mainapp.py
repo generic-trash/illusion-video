@@ -23,7 +23,6 @@ def echo(ws):
                 t0.set_data(msg)
             else:
                 t1.set_data(msg)
-                ws.send(t0.get_data())
         if user == 0 and wshash != hash(t1):
             ws.send(t1.get_data())
             wshash = hash(t1)
