@@ -1,4 +1,4 @@
 flask
-flask-uwsgi-websocket
 gevent
 flask-sockets
+gunicorn
