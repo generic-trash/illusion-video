@@ -14,25 +14,21 @@ websocket = Sockets(app)
 
 @websocket.route('/echo')
 def echo(ws):
-    user = int(request.cookies.get('id'))
     wshash = 0
     while True:
         msg = ws.receive()
-        if msg:
-            if user == 0:
-                t0.set_data(msg)
-        if user != 0 and wshash != hash(t0):
+        if wshash != hash(t0):
             ws.send(t0.get_data())
             wshash = hash(t0)
 
 
 @app.route('/')
 def hi():
-    resp = send_file("static/Recording.html")
-    resp.set_cookie('id', str(uid.val))
-    uid.increment()
-    return resp
+    return send_file("static/Recording.html")
 
+@app.route('/stream')
+def stream():
+    return send_file('static/Streaming.html')
 
 if __name__ == '__main__':
     http_server = WSGIServer(('', int(environ.get('PORT'))), app, handler_class=WebSocketHandler)

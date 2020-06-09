@@ -89,20 +89,50 @@ h2 {
 
 
 <script>
+window.recorder = null
+                let preview = document.getElementById("preview");
 let recording = document.getElementById("recording");
+let startButton = document.getElementById("startButton");
+let stopButton = document.getElementById("stopButton");
 let logElement = document.getElementById("log");
  function log(msg) {
   logElement.innerHTML += msg + "\n";
 }
 socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
-
-socket.onmessage = message => {
-    if (message.data) {
-        var tbr = recording.src
-        recording.src = URL.createObjectURL(message.data)
-        URL.revokeObjectUrl(tbr)
-    }
+function initRecorder(stream) {
+    window.recorder = new MediaRecorder(stream);
+  window.recorder.ondataavailable = event => socket.send(event.data);
+  window.recorder.start()
 }
+ function startRecording(stream) {
+  initRecorder(stream)
+  return window.recorder
+
+}
+ function stop(stream) {
+  stream.getTracks().forEach(track => track.stop());
+}
+function wait(delayInMS) {
+  return new Promise(resolve => setTimeout(resolve, delayInMS));
+}
+ startButton.addEventListener("click", function() {
+  navigator.mediaDevices.getDisplayMedia().then(stream => {
+    preview.srcObject = stream;
+    downloadButton.href = stream;
+    preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+    return new Promise(resolve => preview.onplaying = resolve);
+  }).then(() => startRecording(preview.captureStream()))
+  .then(() => {
+    setInterval(() => {
+         window.recorder.state == "recording" && window.recorder.stop()
+         initRecorder(preview.captureStream())
+     }, 2000);
+  })
+  .catch(log);
+}, false); stopButton.addEventListener("click", function() {
+  stop(preview.srcObject);
+}, false);
+
 
 
 </script>
