@@ -102,6 +102,7 @@ socket.onmessage = message => {
         var tbr = recording.src
         recording.src = URL.createObjectURL(message.data)
         URL.revokeObjectURL(tbr)
+        recording.play()
     }
 }
 
