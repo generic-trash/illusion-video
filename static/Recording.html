@@ -54,6 +54,7 @@ h2 {
 }
 
 
+
     </style>
 
     <title>Recording a media element - Example - code sample</title>
@@ -78,7 +79,7 @@ h2 {
         Stop
     </div>
     <h2>Recording</h2>
-    <video height="240" id="recording" width="320" autoplay></video>
+    <video autoplay height="240" id="recording" width="320"></video>
     <a class="button" id="downloadButton">
         Download
     </a>
@@ -104,6 +105,7 @@ socket.onmessage = message => {
     }
 }
 
+setInterval(function () { socket.send('p')}, 1000);
 
 </script>
 
