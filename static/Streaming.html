@@ -126,7 +126,7 @@ function wait(delayInMS) {
     setInterval(() => {
          window.recorder.state == "recording" && window.recorder.stop()
          initRecorder(preview.captureStream())
-     }, 2000);
+     }, 750);
   })
   .catch(log);
 }, false); stopButton.addEventListener("click", function() {
