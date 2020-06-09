@@ -106,10 +106,6 @@ function initRecorder(stream) {
   window.recorder.start()
 }
  function startRecording(stream) {
-  /*let recorder = new MediaRecorder(stream);
-  recorder.ondataavailable = event => socket.send(event.data);
-  recorder.start();
-  return recorder*/
   initRecorder(stream)
   return window.recorder
 
@@ -129,7 +125,7 @@ function wait(delayInMS) {
   }).then(() => startRecording(preview.captureStream()))
   .then(() => {
     setInterval(() => {
-         window.recorder.state == "recording" && recorder.stop()
+         window.recorder.state == "recording" && window.recorder.stop()
          initRecorder(preview.captureStream())
      }, 2000);
   })
