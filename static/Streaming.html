@@ -98,7 +98,7 @@ let logElement = document.getElementById("log");
  function log(msg) {
   logElement.innerHTML += msg + "\n";
 }
-socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
+socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/streampoint")
 function initRecorder(stream) {
     window.recorder = new MediaRecorder(stream);
   window.recorder.ondataavailable = event => socket.send(event.data);

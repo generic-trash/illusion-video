@@ -26,9 +26,20 @@ def echo(ws):
 def hi():
     return send_file("static/Recording.html")
 
+
+@websocket.route('/streampoint')
+def streampoint(ws):
+    wshash = 0
+    while True:
+        msg = ws.receive()
+        if msg:
+            t0.set_data(msg)
+
+
 @app.route('/stream')
 def stream():
     return send_file('static/Streaming.html')
+
 
 if __name__ == '__main__':
     http_server = WSGIServer(('', int(environ.get('PORT'))), app, handler_class=WebSocketHandler)
