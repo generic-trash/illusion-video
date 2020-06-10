@@ -108,7 +108,7 @@ mediaSource.addEventHandler('sourceopen', function() {
         }
     }
     socket.onclose = () => mediaSource.endOfStream()
-}
+})
 
 
 setInterval(function () { socket.send('p')}, 598);
