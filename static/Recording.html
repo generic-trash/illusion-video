@@ -55,6 +55,7 @@ h2 {
 
 
 
+
     </style>
 
     <title>Recording a media element - Example - code sample</title>
@@ -99,7 +100,6 @@ recording.src = URL.createObjectURL(mediaSource);
   logElement.innerHTML += msg + "\n";
 }
 socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
-socket.binaryType = 'arraybuffer'
 mediaSource.addEventListener('sourceopen', function() {
     window.videoBuf = mediaSource.addSourceBuffer('video/webm')
     socket.onmessage = message => {
@@ -107,12 +107,8 @@ mediaSource.addEventListener('sourceopen', function() {
             window.videoBuf.appendBuffer(message.data);
         }
     }
-    socket.onclose = () => mediaSource.endOfStream()
 })
-
-
 setInterval(function () { socket.send('p')}, 598);
-
 </script>
 
 
