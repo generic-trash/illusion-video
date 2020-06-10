@@ -108,6 +108,7 @@ mediaSource.addEventListener('sourceopen', function() {
             window.videoBuf.appendBuffer(message.data);
         }
     }
+    setInterval(function () { socket.send('p')}, 598);
 })
 </script>
 
