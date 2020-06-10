@@ -100,7 +100,7 @@ recording.src = URL.createObjectURL(mediaSource);
 }
 socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
 socket.binaryType = 'arraybuffer'
-mediaSource.addEventHandler('sourceopen', function() {
+mediaSource.addEventListener('sourceopen', function() {
     window.videoBuf = mediaSource.addSourceBuffer('video/webm')
     socket.onmessage = message => {
         if (message.data) {
