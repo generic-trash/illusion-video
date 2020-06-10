@@ -15,6 +15,7 @@ websocket = Sockets(app)
 @websocket.route('/echo')
 def echo(ws):
     wshash = 0
+    ws.send(t1.get_data())
     while True:
         msg = ws.receive()
         if wshash != hash(t0):
@@ -34,6 +35,8 @@ def streampoint(ws):
         msg = ws.receive()
         if msg:
             t0.set_data(msg)
+        if wshash == 0:
+            t1.set_data(msg)
 
 
 @app.route('/stream')
