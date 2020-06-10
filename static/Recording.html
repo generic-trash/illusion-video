@@ -93,18 +93,23 @@ h2 {
 let recording = document.getElementById("recording");
 let logElement = document.getElementById("log");
 let mediaSource = new MediaSource;
-let videoBuf = mediaSource.addSourceBuffer('video/webm')
+window.videoBuf = null
+recording.src = URL.createObjectURL(mediaSource);
  function log(msg) {
   logElement.innerHTML += msg + "\n";
 }
-recording.src = URL.createObjectURL(mediaSource);
 socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
 socket.binaryType = 'arraybuffer'
-socket.onmessage = message => {
-    if (message.data) {
-        videoBuf.appendBuffer(message.data);
+mediaSource.addEventHandler('sourceopen', function() {
+    window.videoBuf = mediaSource.addSourceBuffer('video/webm')
+    socket.onmessage = message => {
+        if (message.data) {
+            window.videoBuf.appendBuffer(message.data);
+        }
     }
+    socket.onclose = () => mediaSource.endOfStream()
 }
+
 
 setInterval(function () { socket.send('p')}, 598);
 
