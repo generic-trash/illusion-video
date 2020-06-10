@@ -37,6 +37,7 @@ def streampoint(ws):
             t0.set_data(msg)
         if wshash == 0:
             t1.set_data(msg)
+            wshash = hash(t1)
 
 
 @app.route('/stream')
