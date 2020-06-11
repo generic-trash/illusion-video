@@ -17,7 +17,9 @@ websocket = Sockets(app)
 @websocket.route('/echo')
 def echo(ws):
     wshash = 0
-    ws.send(t1.get_data())
+    dt = t1.get_data()
+    if dt:
+        ws.send(dt)
     while True:
         msg = ws.receive()
         if wshash != hash(t0):
@@ -28,7 +30,9 @@ def echo(ws):
 @websocket.route('/audio')
 def audio(ws):
     wshash = 0
-    ws.send(t3.get_data())
+    dt = t3.get_data()
+    if dt:
+        ws.send(dt)
     while True:
         msg = ws.receive()
         if wshash != hash(t2):
