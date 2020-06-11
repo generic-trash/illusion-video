@@ -106,10 +106,12 @@ socket2 = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "w
 socket2.binaryType = 'arraybuffer'
 mediaSource.addEventListener('sourceopen', function() {
     window.videoBuf = mediaSource.addSourceBuffer('video/webm')
+    window.videoBuf.mode = 'sequence'
     socket.onmessage = message => {
             window.videoBuf.appendBuffer(message.data);
     }
     window.audioBuf = mediaSource.addSourceBuffer('audio/webm')
+    window.audioBuf.mode = 'sequence'
     socket2.onmessage = message => {
             window.audioBuf.appendBuffer(message.data);
     }
