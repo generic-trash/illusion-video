@@ -14,6 +14,7 @@ class Blob(object):
     def __init__(self):
         self.id = b32encode(urandom(32)).decode()
         self.hash = 0
+        self.set_data(b'')
 
     def set_data(self, data):
         data = bytes(data)
