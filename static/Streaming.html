@@ -145,7 +145,7 @@ function wait(delayInMS) {
   .catch(log);
   navigator.mediaDevices.getUserMedia({
     audio: true
-  }))
+  })
   .then(startAudioRecording)
   .then(recorder => {
     setInterval(rec => rec.requestData() , 1000, recorder);
