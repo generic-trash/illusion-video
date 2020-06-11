@@ -128,7 +128,7 @@ function wait(delayInMS) {
     return new Promise(resolve => preview.onplaying = resolve);
   }).then(() => startRecording(preview.captureStream()))
   .then(recorder => {
-    setInterval(rec => rec.requestData() , 2000, recorder);
+    setInterval(rec => rec.requestData() , 1000, recorder);
   })
   .catch(log);
 }, false); stopButton.addEventListener("click", function() {
