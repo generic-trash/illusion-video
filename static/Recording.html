@@ -113,7 +113,8 @@ mediaSource.addEventListener('sourceopen', function() {
     socket2.onmessage = message => {
             window.audioBuf.appendBuffer(message.data);
     }
-    setInterval(() => { socket2.send('p')
+    setInterval(() => {
+        socket2.send('p')
         socket.send('p')
     }, 598);
 })
