@@ -8,6 +8,8 @@ from incrementor import Noob, Blob
 uid = Noob()
 t0 = Blob()
 t1 = Blob()
+t2 = Blob()
+t3 = Blob()
 app = Flask(__name__)
 websocket = Sockets(app)
 
@@ -23,6 +25,17 @@ def echo(ws):
             wshash = hash(t0)
 
 
+@websocket.route('/audio')
+def audio(ws):
+    wshash = 0
+    ws.send(t3.get_data())
+    while True:
+        msg = ws.receive()
+        if wshash != hash(t2):
+            ws.send(t2.get_data())
+            wshash = hash(t2)
+
+
 @app.route('/')
 def hi():
     return send_file("static/Recording.html")
@@ -35,9 +48,21 @@ def streampoint(ws):
         msg = ws.receive()
         if msg:
             t0.set_data(msg)
-        if wshash == 0:
-            t1.set_data(msg)
-            wshash = hash(t1)
+            if wshash == 0:
+                t1.set_data(msg)
+                wshash = hash(t1)
+
+
+@websocket.route('/audiostream')
+def streampoint(ws):
+    wshash = 0
+    while True:
+        msg = ws.receive()
+        if msg:
+            t2.set_data(msg)
+            if wshash == 0:
+                t3.set_data(msg)
+                wshash = hash(t3)
 
 
 @app.route('/stream')

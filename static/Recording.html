@@ -95,20 +95,25 @@ let recording = document.getElementById("recording");
 let logElement = document.getElementById("log");
 let mediaSource = new MediaSource;
 window.videoBuf = null
+window.audioBuf = null
 recording.src = URL.createObjectURL(mediaSource);
  function log(msg) {
   logElement.innerHTML += msg + "\n";
 }
 socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
 socket.binaryType = 'arraybuffer'
+socket2 = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/audio")
+socket2.binaryType = 'arraybuffer'
 mediaSource.addEventListener('sourceopen', function() {
     window.videoBuf = mediaSource.addSourceBuffer('video/webm')
     socket.onmessage = message => {
-        if (message.data) {
             window.videoBuf.appendBuffer(message.data);
-        }
     }
-    setInterval(function () { socket.send('p')}, 598);
+    window.audioBuf = mediaSource.addSourceBuffer('audio/webm')
+    socket2.onmessage = message => {
+            window.audioBuf.appendBuffer(message.data);
+    }
+    setInterval(function () { socket2.send('p')}, 598);
 })
 recording.addEventListener('canplay', () => recording.play())
 </script>
