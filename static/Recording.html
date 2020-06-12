@@ -68,22 +68,10 @@ h2 {
     that isn't very useful).
 </p>
 <br>
-<div class="left">
-    <div class="button" id="startButton">
-        Start
-    </div>
-    <h2>Preview</h2>
-    <video autoplay="autoplay" height="120" id="preview" muted="muted" width="160"></video>
-</div>
 <div class="right">
-    <div class="button" id="stopButton">
-        Stop
-    </div>
     <h2>Recording</h2>
+    <audio id="audio"></audio>
     <video autoplay height="240" id="recording" width="320" controls></video>
-    <a class="button" id="downloadButton">
-        Download
-    </a>
 </div>
 <div class="bottom">
     <pre id="log"></pre>
@@ -91,12 +79,15 @@ h2 {
 
 
 <script>
+let audio = document.getElementById('audio');
 let recording = document.getElementById("recording");
 let logElement = document.getElementById("log");
 let mediaSource = new MediaSource;
+let audioSource = new MediaSource
 window.videoBuf = null
 window.audioBuf = null
 recording.src = URL.createObjectURL(mediaSource);
+audio.src = URL.createObjectURL(audioSource);
  function log(msg) {
   logElement.innerHTML += msg + "\n";
 }
@@ -110,7 +101,7 @@ mediaSource.addEventListener('sourceopen', function() {
     socket.onmessage = message => {
             window.videoBuf.appendBuffer(message.data);
     }
-    window.audioBuf = mediaSource.addSourceBuffer('audio/webm')
+    window.audioBuf = audioSource.addSourceBuffer('audio/webm')
     window.audioBuf.mode = 'sequence'
     socket2.onmessage = message => {
             window.audioBuf.appendBuffer(message.data);
@@ -118,7 +109,7 @@ mediaSource.addEventListener('sourceopen', function() {
     setInterval(() => {
         socket2.send('p')
         socket.send('p')
-    }, 598);
+    }, 1000);
 })
 recording.addEventListener('canplay', () => recording.play())
 </script>
