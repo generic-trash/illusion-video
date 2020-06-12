@@ -108,12 +108,12 @@ mediaSource.addEventListener('sourceopen', function() {
     window.videoBuf = mediaSource.addSourceBuffer('video/webm')
     window.videoBuf.mode = 'sequence'
     socket.onmessage = message => {
-            window.videoBuf.appendBufferAsync(message.data);
+            window.videoBuf.appendBuffer(message.data);
     }
     window.audioBuf = mediaSource.addSourceBuffer('audio/webm')
     window.audioBuf.mode = 'sequence'
     socket2.onmessage = message => {
-            window.audioBuf.appendBufferAsync(message.data);
+            window.audioBuf.appendBuffer(message.data);
     }
     setInterval(() => {
         socket2.send('p')
