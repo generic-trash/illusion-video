@@ -80,7 +80,7 @@ h2 {
         Stop
     </div>
     <h2>Recording</h2>
-    <video autoplay height="240" id="recording" width="320"></video>
+    <video autoplay height="240" id="recording" width="320" controls></video>
     <a class="button" id="downloadButton">
         Download
     </a>
@@ -108,12 +108,12 @@ mediaSource.addEventListener('sourceopen', function() {
     window.videoBuf = mediaSource.addSourceBuffer('video/webm')
     window.videoBuf.mode = 'sequence'
     socket.onmessage = message => {
-            window.videoBuf.appendBuffer(message.data);
+            window.videoBuf.appendBufferAsync(message.data);
     }
     window.audioBuf = mediaSource.addSourceBuffer('audio/webm')
     window.audioBuf.mode = 'sequence'
     socket2.onmessage = message => {
-            window.audioBuf.appendBuffer(message.data);
+            window.audioBuf.appendBufferAsync(message.data);
     }
     setInterval(() => {
         socket2.send('p')
