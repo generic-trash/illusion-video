@@ -3,8 +3,9 @@
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <meta charset="utf-8">
-    <link href="Recording%20a%20media%20element%20-%20Example%20-%20code%20sample_files/samples.css" rel="stylesheet"
+    <link href="/static/Recording%20a%20media%20element%20-%20Example%20-%20code%20sample_files/samples.css" rel="stylesheet"
           type="text/css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <style type="text/css">
             body {
@@ -52,10 +53,6 @@ h2 {
   clear: both;
   padding-top: 10px;
 }
-
-
-
-
     </style>
 
     <title>Recording a media element - Example - code sample</title>
@@ -91,25 +88,18 @@ audio.src = URL.createObjectURL(audioSource);
  function log(msg) {
   logElement.innerHTML += msg + "\n";
 }
-socket = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/echo")
-socket.binaryType = 'arraybuffer'
-socket2 = new WebSocket(((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/audio")
-socket2.binaryType = 'arraybuffer'
+socket = new io()
 mediaSource.addEventListener('sourceopen', function() {
     window.videoBuf = mediaSource.addSourceBuffer('video/webm')
     window.videoBuf.mode = 'sequence'
-    socket.onmessage = message => {
-            window.videoBuf.appendBuffer(message.data);
-    }
     window.audioBuf = audioSource.addSourceBuffer('audio/webm')
     window.audioBuf.mode = 'sequence'
-    socket2.onmessage = message => {
-            window.audioBuf.appendBuffer(message.data);
-    }
-    setInterval(() => {
-        socket2.send('p')
-        socket.send('p')
-    }, 1000);
+    socket.on('streamvid', data => {
+        window.videoBuf.appendBuffer(data);
+    })
+    socket.on('streamaud', data => {
+        window.audioBuf.appendBuffer(data);
+    })
 })
 recording.addEventListener('canplay', () => recording.play())
 </script>

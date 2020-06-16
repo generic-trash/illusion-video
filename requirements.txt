@@ -1,3 +1,3 @@
 flask
-gevent
-flask-sockets
+eventlet
+flask-socketio
