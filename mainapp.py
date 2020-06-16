@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from os import environ
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -17,4 +18,4 @@ def message_handler(msg):
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, port=environ.get('PORT'))
