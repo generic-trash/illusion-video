@@ -21,7 +21,7 @@ def viewer_url():
     return send_file('static/Recording.html')
 
 @app.route('/stream')
-def viewer_url():
+def streamer_url():
     return send_file('static/Streaming.html')
 
 
