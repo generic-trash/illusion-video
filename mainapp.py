@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, send_file
 from os import environ
 from flask_socketio import SocketIO, emit
 
@@ -15,6 +15,14 @@ def message_handler(msg):
 @socketio.on('streamaudio')
 def message_handler(msg):
     emit('streamaud', msg, broadcast=True, include_self=False)
+
+@app.route('/')
+def viewer_url():
+    return send_file('static/Recording.html')
+
+@app.route('/stream')
+def viewer_url():
+    return send_file('static/Streaming.html')
 
 
 if __name__ == '__main__':
