@@ -1,1 +1,1 @@
-web: gunicorn -k eventlet mainapp:app
+web: python3 mainapp.py
