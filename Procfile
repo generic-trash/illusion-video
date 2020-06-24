@@ -1,1 +1,1 @@
-web: python3 mainapp.py
+web: hypercorn mainapp:app
