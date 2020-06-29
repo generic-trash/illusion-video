@@ -3,14 +3,14 @@ import asyncio
 from functools import wraps
 from incrementor import Noob, Blob
 
-video_evts = asyncio.Event()
-audio_evts = asyncio.Event()
 uid = Noob()
 t0 = Blob()
 t1 = Blob()
 t2 = Blob()
 t3 = Blob()
 app = Quart(__name__)
+video_evts = asyncio.Event()
+audio_evts = asyncio.Event()
 
 
 @app.websocket('/echo')
@@ -20,7 +20,10 @@ async def echo():
     if dt:
         await ws.send(dt)
     while True:
-        await video_evts.wait()
+        try:
+            await video_evts.wait()
+        except AttributeError:
+            pass
         if wshash != hash(t0):
             await ws.send(t0.get_data())
             wshash = hash(t0)
@@ -33,7 +36,10 @@ async def audio():
     if dt:
         await ws.send(dt)
     while True:
-        await audio_evts.wait()
+        try:
+            await audio_evts.wait()
+        except AttributeError:
+            pass
         if wshash != hash(t2):
             await ws.send(t2.get_data())
             wshash = hash(t2)
