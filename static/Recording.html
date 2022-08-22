@@ -109,12 +109,12 @@ mediaSource.addEventListener('sourceopen', function() {
     socket.onopen = () => {
         setInterval(() => {
             socket.send('p');
-        }
+        })
     }
     socket2.onopen = () => {
         setInterval(() => {
             socket2.send('p');
-        }
+        })
     }
 })
 recording.addEventListener('canplay', () => recording.play())
