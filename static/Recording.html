@@ -106,10 +106,16 @@ mediaSource.addEventListener('sourceopen', function() {
     socket2.onmessage = message => {
             window.audioBuf.appendBuffer(message.data);
     }
-    setInterval(() => {
-        socket2.send('p')
-        socket.send('p')
-    }, 1000);
+    socket.onopen = () => {
+        setInterval(() => {
+            socket.send('p');
+        }
+    }
+    socket2.onopen = () => {
+        setInterval(() => {
+            socket2.send('p');
+        }
+    }
 })
 recording.addEventListener('canplay', () => recording.play())
 </script>
