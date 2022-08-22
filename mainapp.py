@@ -16,13 +16,17 @@ audio_evts = asyncio.Event()
 @app.websocket('/echo')
 async def echo():
     wshash = 0
+    print("echo connected")
     dt = t1.get_data()
     if dt:
         await ws.send(dt)
+        print("data")
     while True:
         try:
             await video_evts.wait()
+            print("looped")
         except AttributeError:
+            print("error")
             pass
         if wshash != hash(t0):
             await ws.send(t0.get_data())
@@ -39,6 +43,7 @@ async def audio():
         try:
             await audio_evts.wait()
         except AttributeError:
+            print("error")
             pass
         if wshash != hash(t2):
             await ws.send(t2.get_data())
